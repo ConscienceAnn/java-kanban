@@ -1,7 +1,11 @@
+package main.model;
+
+import main.status.StatusTask;
+
 import java.util.ArrayList;
 
 public class Epic extends Task {
-    private ArrayList<Integer> subtaskIds;
+    private ArrayList<Integer> subtaskIds = new ArrayList<>();
 
 
     public Epic(String name, String description, StatusTask status, ArrayList<Integer> subtaskIds) {
@@ -29,12 +33,12 @@ public class Epic extends Task {
 
     @Override
     public String toString() {
-        return "Epic{" +
+        return "main.model.Epic{" +
                 "name='" + getName() + '\'' +
                 ", description='" + getDescription() + '\'' +
                 ", id=" + getId() +
                 ", subtaskIDs=" + subtaskIds +
-                ", status='" + getStatus() +
+                ", main.status='" + getStatus() +
                 '}';
     }
 

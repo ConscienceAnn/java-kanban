@@ -1,3 +1,11 @@
+package main;
+
+import main.manager.Manager;
+import main.model.Epic;
+import main.status.StatusTask;
+import main.model.Subtask;
+import main.model.Task;
+
 public class Main {
 
     public static void main(String[] args) {
@@ -7,19 +15,19 @@ public class Main {
             Manager manager = new Manager();
 
             // Создание
-            Task task1 = new Task("Task #1", "Task1 description", StatusTask.NEW);
-            Task task2 = new Task("Task #2", "Task2 description", StatusTask.IN_PROGRESS);
+            Task task1 = new Task("main.model.Task #1", "Task1 description", StatusTask.NEW);
+            Task task2 = new Task("main.model.Task #2", "Task2 description", StatusTask.IN_PROGRESS);
             final int taskId1 = manager.createTask(task1);
             final int taskId2 = manager.createTask(task2);
 
-            Epic epic1 = new Epic("Epic #1", "Epic1 description", StatusTask.NEW);
-            Epic epic2 = new Epic("Epic #2", "Epic2 description",StatusTask.NEW);
+            Epic epic1 = new Epic("main.model.Epic #1", "Epic1 description", StatusTask.NEW);
+            Epic epic2 = new Epic("main.model.Epic #2", "Epic2 description",StatusTask.NEW);
             final int epicId1 = manager.createEpic(epic1);
             final int epicId2 = manager.createEpic(epic2);
 
-            Subtask subtask1 = new Subtask("Subtask #1-1", "Subtask description", StatusTask.NEW, epicId1);
-            Subtask subtask2 = new Subtask("Subtask #2-1", "Subtask description", StatusTask.NEW, epicId1);
-            Subtask subtask3 = new Subtask("Subtask #3-2", "Subtask description", StatusTask.DONE, epicId2);
+            Subtask subtask1 = new Subtask("main.model.Subtask #1-1", "main.model.Subtask description", StatusTask.NEW, epicId1);
+            Subtask subtask2 = new Subtask("main.model.Subtask #2-1", "main.model.Subtask description", StatusTask.NEW, epicId1);
+            Subtask subtask3 = new Subtask("main.model.Subtask #3-2", "main.model.Subtask description", StatusTask.DONE, epicId2);
             final Integer subtaskIds1 = manager.createSubtask(subtask1);
             final Integer subtaskIds2 = manager.createSubtask(subtask2);
             final Integer subtaskIds3 = manager.createSubtask(subtask3);

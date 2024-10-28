@@ -1,3 +1,7 @@
+package main.model;
+
+import main.status.StatusTask;
+
 public class Subtask extends Task {
     private int epicId;
 
@@ -18,12 +22,12 @@ public class Subtask extends Task {
 
     @Override
     public String toString() {
-        return "Subtask{" +
+        return "main.model.Subtask{" +
                 "name='" + getName() + '\'' +
                 ", description='" + getDescription() + '\'' +
                 ", id=" + getId() +
                 ", epicId=" + epicId +
-                ", status=" + getStatus() +
+                ", main.status=" + getStatus() +
                 '}';
 
     }
