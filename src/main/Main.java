@@ -1,6 +1,6 @@
 package main;
 
-import main.manager.Manager;
+import main.manager.InMemoryTaskManager;
 import main.model.Epic;
 import main.status.StatusTask;
 import main.model.Subtask;
@@ -12,7 +12,7 @@ public class Main {
         System.out.println("Поехали!");
 
 
-            Manager manager = new Manager();
+            InMemoryTaskManager manager = new InMemoryTaskManager();
 
             // Создание
             Task task1 = new Task("main.model.Task #1", "Task1 description", StatusTask.NEW);
