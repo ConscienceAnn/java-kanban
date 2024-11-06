@@ -3,14 +3,16 @@ package main.manager;
 import main.model.Task;
 
 import java.util.ArrayList;
+import java.util.List;
+
 
 public class InMemoryHistoryManager implements HistoryManager {
-    public static int maxInList = 10;
-    public static ArrayList<Task> listHistory = new ArrayList<>();
+    public static int MAX_IN_LIST = 10;
+    public static List<Task> listHistory = new ArrayList<>();
 
     @Override
     public void add(Task task) {
-        if (listHistory.size() < maxInList){
+        if (listHistory.size() < MAX_IN_LIST){
             listHistory.add(task);
         } else {
             listHistory.remove(0);
@@ -19,7 +21,7 @@ public class InMemoryHistoryManager implements HistoryManager {
     }
 
     @Override
-    public ArrayList<Task> getHistory() {
+    public List<Task> getHistory() {
         return listHistory;
     }
 

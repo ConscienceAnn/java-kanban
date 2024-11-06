@@ -19,7 +19,7 @@ public class TaskManagerTest <T extends TaskManager> {
     @Test
     void addNewTask() { //Название из ТЗ, но тут сразу несколько проверок и непонятно как впихнуть все в название
         Task task = new Task("Test addNewTask", "Test addNewTask description", NEW);
-        final int taskId = taskManager.createTask(task); // вылетаю с ошибкой, но не понимаю, что не так?
+        final int taskId = taskManager.createTask(task); // вылетаю с ошибкой на этой строке, но не понимаю что происходит и что ему тут не нравится.
 
         final Task savedTask = taskManager.getTaskOnId(taskId);
 

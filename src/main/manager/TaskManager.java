@@ -5,6 +5,7 @@ import main.model.Subtask;
 import main.model.Task;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public interface TaskManager {
     int createTask(Task task);
@@ -45,5 +46,5 @@ public interface TaskManager {
 
     ArrayList<Subtask> getSubtasksOnEpic(int id);
 
-    void updateEpicStatus(int epicId);
+    List<Task> getHistory();
 }
