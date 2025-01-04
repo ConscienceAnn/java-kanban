@@ -173,7 +173,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public List<Task> getHistory() {
-        return List.of();
+        return historyManager.getHistory();
     }
 
     private void updateEpicStatus(int epicId) {
