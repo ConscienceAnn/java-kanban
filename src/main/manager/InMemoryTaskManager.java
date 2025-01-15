@@ -28,7 +28,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public int createEpic(Epic epic){
+    public int createEpic(Epic epic) {
         epic.setId(generateId++);
         epics.put(epic.getId(), epic);
         return epic.getId();
@@ -48,7 +48,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public void deleteTaskOnId(int id){
+    public void deleteTaskOnId(int id) {
         if (tasks.containsKey(id)) {
             tasks.remove(id);
         }
@@ -84,7 +84,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public void deleteAllSubtasks(){
+    public void deleteAllSubtasks() {
         subtasks.clear();
         for (Epic epic : epics.values()) {
             ArrayList<Integer> listIds = epic.getSubtaskIds();
@@ -105,7 +105,8 @@ public class InMemoryTaskManager implements TaskManager {
         if (tasks.containsKey(id)) {
             historyManager.add(tasks.get(id));
             return tasks.get(id);
-        } return null;
+        }
+        return null;
     }
 
     @Override
@@ -113,7 +114,8 @@ public class InMemoryTaskManager implements TaskManager {
         if (epics.containsKey(id)) {
             historyManager.add(epics.get(id));
             return epics.get(id);
-        } return null;
+        }
+        return null;
     }
 
     @Override
@@ -121,7 +123,8 @@ public class InMemoryTaskManager implements TaskManager {
         if (subtasks.containsKey(id)) {
             historyManager.add(subtasks.get(id));
             return subtasks.get(id);
-        } return null;
+        }
+        return null;
     }
 
     @Override
@@ -148,7 +151,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void updateSubtask(Subtask subtask) {
-        if (subtasks.containsKey(subtask.getId())){
+        if (subtasks.containsKey(subtask.getId())) {
             subtasks.put(subtask.getId(), subtask);
             int epicId = subtask.getEpicId();
             updateEpicStatus(epicId);
@@ -157,7 +160,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void updateEpic(Epic epic) {
-        if (epics.containsKey(epic.getId())){
+        if (epics.containsKey(epic.getId())) {
             tasks.put(epic.getId(), epic);
         }
     }

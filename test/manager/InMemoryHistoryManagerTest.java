@@ -2,27 +2,74 @@ package manager;
 
 
 import main.manager.InMemoryHistoryManager;
+import main.manager.InMemoryTaskManager;
+import main.manager.TaskManager;
 import main.model.*;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import java.util.List;
+import java.util.Random;
 
 import static main.status.StatusTask.NEW;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class InMemoryHistoryManagerTest {
 
-    InMemoryHistoryManager historyManager = new InMemoryHistoryManager();
+    protected Subtask addSubtask(int epicId) {
+        return new Subtask("name1", "description1",NEW, epicId);
+    };
+    protected Epic addEpic() {
+        return new Epic("name1", "description1", NEW);
+    };
+    protected Task addTask() {
+        return new Task("name1", "description1", NEW);
+    };
+    protected TaskManager manager;
+    @BeforeEach
+    void beforeEach() {
+        manager = new InMemoryTaskManager();
+    }
 
     @Test
-    void addInHistoryTasks() {
-        Task task1 = new Task("Test addNewTask1", "Test addNewTask1 description", NEW);
-        Task task2 = new Task("Test addNewTask2", "Test addNewTask2 description", NEW);
-        historyManager.add(task1);
-        historyManager.add(task2);
-        List<Task> history = historyManager.getHistory();
-        assertNotNull(history, "История не пустая.");
-        assertEquals(2, history.size(), "Верное кол-во задач.");
-        assertIterableEquals(List.of(task1,task2),historyManager.getHistory(), "Добавлена в конце.");
+    public void shouldBeInfinityTasksInHistory() { //done
+        int random = new Random().nextInt(1000);
+        for (int i = 0; i < random; i++) {
+            manager.getTaskOnId(manager.createTask(addTask()));
+        }
+        assertEquals(random, manager.getHistory().size());
     }
+
+    @Test
+    public void shouldBeAddTasksInHistory() { //done
+        Task task = addTask();
+        manager.getTaskOnId(manager.createTask(task));
+        assertEquals(List.of(task),manager.getHistory());
+    }
+
+    @Test
+    public void shouldBeAddEpicInHistory() { //done
+        Epic epic = addEpic();
+        manager.getEpicOnId(manager.createEpic(epic));
+        assertEquals(List.of(epic),manager.getHistory());
+    }
+
+    @Test
+    public void shouldBeRemoveTasksInHistory() { //done
+        Task task = addTask();
+        manager.deleteTaskOnId(task.getId());
+        System.out.println(manager.getHistory());
+        for (Task elem : manager.getHistory()){
+            assertEquals(null,elem);
+        }
+    }
+
+    @Test
+    public void shouldBeRemoveEpicInHistory() {
+        Epic epic = addEpic();
+        int epicId = manager.createEpic(epic);
+        manager.deleteEpicOnId(epicId);
+        assertEquals(true,manager.getHistory().isEmpty());
+    }
+
 
 }
