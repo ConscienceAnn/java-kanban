@@ -9,6 +9,7 @@ import main.model.Task;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 public class InMemoryTaskManager implements TaskManager {
@@ -51,6 +52,7 @@ public class InMemoryTaskManager implements TaskManager {
     public void deleteTaskOnId(int id) {
         if (tasks.containsKey(id)) {
             tasks.remove(id);
+            historyManager.remove(id);
         }
     }
 
@@ -64,6 +66,7 @@ public class InMemoryTaskManager implements TaskManager {
             ArrayList<Integer> listIds = epics.get(idEpic).getSubtaskIds();
             listIds.remove(subtask);
             updateEpicStatus(epics.get(subtask).getId());
+            historyManager.remove(id);
         }
     }
 
@@ -75,16 +78,23 @@ public class InMemoryTaskManager implements TaskManager {
             for (int subtaskId : epic.getSubtaskIds()) {
                 subtasks.remove(subtaskId);
             }
+            historyManager.remove(id);
         }
     }
 
     @Override
     public void deleteAllTasks() {
+        for (Map.Entry<Integer, Task> taskEntry : tasks.entrySet()) {
+            historyManager.remove(taskEntry.getKey());
+        }
         tasks.clear();
     }
 
     @Override
     public void deleteAllSubtasks() {
+        for (Map.Entry<Integer, Subtask> subtaskEntry : subtasks.entrySet()) {
+            historyManager.remove(subtaskEntry.getKey());
+        }
         subtasks.clear();
         for (Epic epic : epics.values()) {
             ArrayList<Integer> listIds = epic.getSubtaskIds();
@@ -96,6 +106,12 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void deleteAllEpics() {
+        for (Map.Entry<Integer,Epic> epicEntry : epics.entrySet()) {
+            for (Map.Entry<Integer, Subtask> subtaskEntry : subtasks.entrySet()) {
+                historyManager.remove(subtaskEntry.getKey());
+            }
+            historyManager.remove(epicEntry.getKey());
+        }
         epics.clear();
         subtasks.clear();
     }
