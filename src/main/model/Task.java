@@ -1,6 +1,7 @@
 package main.model;
 
 import main.status.StatusTask;
+import main.status.TaskType;
 
 import java.util.Objects;
 
@@ -9,11 +10,13 @@ public class Task {
     private String description;
     private int id;
     private StatusTask status;
+    protected TaskType taskType;
 
     public Task(String name, String description, StatusTask status) {
         this.name = name;
         this.description = description;
         this.status = status;
+        this.taskType = TaskType.TASK;
     }
 
     public Task(String name, String description, int id, StatusTask status) {
@@ -21,11 +24,17 @@ public class Task {
         this.description = description;
         this.id = id;
         this.status = status;
+        this.taskType = TaskType.TASK;
     }
 
     public Task(String name, String description) {
         this.name = name;
         this.description = description;
+        this.taskType = TaskType.TASK;
+    }
+
+    public TaskType getTaskType() {
+        return TaskType.TASK;
     }
 
     public String getName() {
@@ -73,4 +82,16 @@ public class Task {
     public int hashCode() {
         return Objects.hash(name, description, id, status);
     }
+
+    @Override
+    public String toString() {
+        return "Task.Task{" +
+                "id=" + getId() +
+                ", Task.TaskType = '" + TaskType.TASK +
+                ", nameTask='" + getName() +
+                ", descriptionTask='" + getDescription() +
+                ", statusTask='" + getStatus() +
+                '}';
+    }
+
 }

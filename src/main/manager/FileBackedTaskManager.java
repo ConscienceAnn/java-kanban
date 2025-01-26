@@ -5,6 +5,7 @@ import main.model.Epic;
 import main.model.Subtask;
 import main.model.Task;
 import main.status.StatusTask;
+import main.status.StatusTask.*;
 import main.status.TaskType;
 
 import java.io.*;
@@ -12,7 +13,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 public class FileBackedTaskManager extends InMemoryTaskManager {
 
@@ -158,15 +158,21 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(file, StandardCharsets.UTF_8))) {
             writer.write("id,type,name,description,status,epicid\n");
             for (Map.Entry<Integer, Task> entry : tasks.entrySet()) {
-                writer.write(getTaskOnId(entry.getKey()).toString() + "\n");
+                final Task task = entry.getValue();
+                writer.write(task.toString());
+                writer.newLine();
             }
 
             for (Map.Entry<Integer, Epic> entry : epics.entrySet()) {
-                writer.write(getEpicOnId(entry.getKey()).toString() + "\n");
+                final Task task = entry.getValue();
+                writer.write(task.toString());
+                writer.newLine();
             }
 
             for (Map.Entry<Integer, Subtask> entry : subtasks.entrySet()) {
-                writer.write(getSubtaskOnId(entry.getKey()).toString() + "\n");
+                final Task task = entry.getValue();
+                writer.write(task.toString());
+                writer.newLine();
             }
 
         } catch (IOException exception) {
@@ -177,31 +183,31 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     private static Task fromString(String value) {
 
         String[] values = value.split(",");
-        String id = values[0];
-        String type = values[1];
+        int id = Integer.parseInt(values[0]);
+        String taskType = String.valueOf(TaskType.valueOf(values[1]));
         String name = values[2];
-        String taskStatus = values[3];
+        String taskStatus = String.valueOf(StatusTask.valueOf(values[3]));
         String description = values[4];
-        Integer epicId = type.equals(TaskType.SUBTASK.toString()) ? Integer.valueOf(values[7]) : null;
+        Integer epicId = taskType.equals(TaskType.SUBTASK.toString()) ? Integer.valueOf(values[7]) : null;
 
-        switch (type) {
+        switch (taskType) {
 
             case "EPIC":
                 Epic epic = new Epic(name, description);
-                epic.setId(Integer.parseInt(id));
-                epic.setStatus(StatusTask.valueOf(taskStatus.toUpperCase()));
+                epic.setId(id);
+                epic.setStatus(StatusTask.valueOf(taskStatus));
                 return epic;
 
             case "SUBTASK":
                 Subtask subtask = new Subtask(name, description, epicId);
-                subtask.setId(Integer.parseInt(id));
-                subtask.setStatus(StatusTask.valueOf(taskStatus.toUpperCase()));
+                subtask.setId(id);
+                subtask.setStatus(StatusTask.valueOf(taskStatus));
                 return subtask;
 
             case "TASK":
                 Task task = new Task(name, description);
-                task.setId(Integer.parseInt(id));
-                task.setStatus(StatusTask.valueOf(taskStatus.toUpperCase()));
+                task.setId(id);
+                task.setStatus(StatusTask.valueOf(taskStatus));
                 return task;
 
             default:
@@ -225,18 +231,22 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                     continue;
                 }
 
-                String[] lines = line.split(",");
+                final Task task = fromString(line);
+                final int id = task.getId();
 
-                if (lines[1].equalsIgnoreCase("TASK")) {
-                    Task task = fromString(line);
-                    tasks.put(Objects.requireNonNull(task).getId(), task);
-                } else if (lines[1].equalsIgnoreCase("EPIC")) {
-                    Task task = fromString(line);
-                    epics.put(Objects.requireNonNull(task).getId(), (Epic) task);
-                } else if (lines[1].equalsIgnoreCase("SUBTASK")) {
-                    Task task = fromString(line);
-                    subtasks.put(Objects.requireNonNull(task).getId(), (Subtask) task);
+                switch (task.getTaskType()) {
+                    case TASK:
+                        tasks.put(id, task);
+                        break;
+                    case SUBTASK:
+                        subtasks.put(id, (Subtask) task);
+                        break;
+                    case EPIC:
+                        epics.put(id, (Epic) task);
+                        break;
                 }
+                //из ревью "Также потом нужно будет пройтись по подзадачам добавить их айди в нужные эпики"
+                // Не поняла... Настолько, что даже вопрос не могу задать. Смысл не улавливаю.
             }
 
         } catch (IOException exception) {
