@@ -5,7 +5,6 @@ import main.model.Epic;
 import main.model.Subtask;
 import main.model.Task;
 import main.status.StatusTask;
-import main.status.StatusTask.*;
 import main.status.TaskType;
 
 import java.io.*;
@@ -217,42 +216,56 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
     }
 
-    public void loadFromFile(File file) {
+    public static FileBackedTaskManager loadFromFile(File file) {
 
         FileBackedTaskManager backedManager;
-        String line = "";
+       // String line = "";
+      //  InMemoryTaskManager taskManager = null;
 
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             backedManager = new FileBackedTaskManager(file);
 
-            while (reader.ready()) {
-                line = reader.readLine();
-                if (line.isEmpty()) {
-                    continue;
-                }
+            Task task;
+            String value = reader.readLine(); // Считаем сначала первую строку.
+            int maxId = 0;
 
-                final Task task = fromString(line);
-                final int id = task.getId();
+            if (value != null) {
+                while (!(value = reader.readLine()).isBlank()) { // До пустой строки.
+                    task = backedManager.fromString(value);
+                    backedManager.addTask(task);
 
-                switch (task.getTaskType()) {
-                    case TASK:
-                        tasks.put(id, task);
-                        break;
-                    case SUBTASK:
-                        subtasks.put(id, (Subtask) task);
-                        break;
-                    case EPIC:
-                        epics.put(id, (Epic) task);
-                        break;
+                    if (task.getId() > maxId) {
+                        maxId = task.getId();
+                    }
                 }
-                //из ревью "Также потом нужно будет пройтись по подзадачам добавить их айди в нужные эпики"
-                // Не поняла... Настолько, что даже вопрос не могу задать. Смысл не улавливаю.
             }
 
-        } catch (IOException exception) {
+            } catch (IOException exception) {
             throw new ManagerSaveException("Ошибка при получении данных их файла");
         }
 
+        return backedManager;
     }
+
+    protected void addTask(Task task) {
+        final int id = task.getId(); // ID задачи.
+        switch (task.getTaskType()) {
+            case EPIC:
+                epics.put(id, (Epic) task);
+                break;
+            case TASK:
+                tasks.put(id, task);
+                break;
+            case SUBTASK:
+                for (Map.Entry<Integer, Subtask> e : subtasks.entrySet()) {
+                    final Subtask subtask = e.getValue();
+                    final Epic epic = epics.get(subtask.getEpicId());
+                    epic.addSubtaskIds(subtask.getId());
+                }
+                subtasks.put(id, (Subtask) task);
+                break;
+        }
+    }
+
 
 }

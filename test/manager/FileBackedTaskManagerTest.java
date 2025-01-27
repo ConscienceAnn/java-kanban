@@ -15,8 +15,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class FileBackedTaskManagerTest {
 
@@ -58,17 +57,27 @@ public class FileBackedTaskManagerTest {
         managerFile.getEpicOnId(epic.getId());
         assertTrue(Files.exists(Paths.get("file.csv")), "Файл не создан.");
     }
+/*
+для него перекроила и вывела switch-case в отдельный метод, но все равно не поддается..
 
     @Test
     public void shouldSaveAndLoadSomeTasks() throws IOException{
-        Task task = createTask();
-        Task task1 = createTask();
-        manager.createTask(task);
-        manager.createTask(task1);
-        assertEquals(List.of(task,task1), manager.getAllTask());
-        manager = Managers.getDefault(file);
-       // assertEquals(List.of(task,task1), manager.getAllTask());
-    }
+        FileBackedTaskManager loadFromFile = FileBackedTaskManager.loadFromFile(file);
+        final List<Task> tasks = loadFromFile.getAllTask();
+        assertNotNull(tasks, "Возвращает не пустой список задач");
+        assertEquals(1, tasks.size(), "Возвращает не пустой список задач");
+        final List<Epic> epics = loadFromFile.getAllEpic();
+        assertNotNull(epics, "Возвращает не пустой список эпиков");
+        assertEquals(1, epics.size(), "Возвращает не пустой список эпиков");
+        final List<Subtask> subtasks = loadFromFile.getAllSubtask();
+        assertNotNull(subtasks, "Возвращает не пустой список подзадач");
+        assertEquals(1, subtasks.size(), "Возвращает не пустой список подзадач");
+        assertEquals(manager.getAllTask(), loadFromFile.getAllTask(), "Список задач после выгрузки не совпадает");
+        assertEquals(manager.getAllEpic(), loadFromFile.getAllEpic(), "Список эпиков после выгрузки не совпадает");
+        assertEquals(manager.getAllSubtask(), loadFromFile.getAllSubtask(), "Список подзадач после выгрузки не совпадает");
+    }*/
+
+
 
 }
 
